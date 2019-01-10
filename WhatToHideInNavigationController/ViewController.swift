@@ -140,6 +140,18 @@ extension ViewController: UITableViewDataSource {
 
         return cell
     }
+
+    // I don't know if this is a bug of UIScrollView or not, but we need this remedy to bring back bars after hiding bars with hidesBarsOnSwipe = true
+    // https://stackoverflow.com/questions/32992897/hidesbarsonswipe-does-not-show-navigationbar-when-scrolling-up-to-the-top-slowly
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        if (indexPath.section == 0 && indexPath.row == 0) {
+//            navigationController?.hidesBarsOnSwipe = false
+//            navigationController?.setNavigationBarHidden(false, animated: true)
+//            navigationController?.setToolbarHidden(false, animated: true)
+//        } else {
+//            navigationController?.hidesBarsOnSwipe = true
+//        }
+//    }
 }
 
 extension ViewController: SwitchTableViewCellDelegate {
