@@ -62,7 +62,7 @@ class ViewController: UIViewController {
             Item("setNavigationBarHidden(:, animated:)", "Hides navigation bar.", false),
             Item("setToolBarHidden(:, animated:)", "Hides Toolbar (hidden by default)", false),
             Item("hidesBarsOnTap", "Hides Navigation/Toolbars when you tap on the main view", false),
-            Item("hidesBarsOnSwipe", "Hides Navigation/Toolbars when you swipe up the scroll view", false),
+            Item("hidesBarsOnSwipe", "Hides Navigation/Toolbars when you swipe up the scroll view from bottom", false),
             Item("hidesBarsWhenVerticallyCompact", "Hides Navigation/Toolbars on landscape view of the phone devices (except for plus and X devices)", false),
             Item("hidesBarsWhenKeyboardAppears", "Hides Navigation/Toolbars when keyboard appears", false)
         ],
