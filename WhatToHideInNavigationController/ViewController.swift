@@ -244,6 +244,13 @@ extension ViewController: SwitchTableViewCellDelegate {
     }
 }
 
+extension ViewController: SwitchTableViewCellWithTextFieldDelegate {
+    func keyboardDismissed() {
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationController?.setToolbarHidden(false, animated: true)
+    }
+}
+
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

@@ -8,6 +8,9 @@
 
 import UIKit
 
+protocol SwitchTableViewCellWithTextFieldDelegate: SwitchTableViewCellDelegate {
+    func keyboardDismissed()
+}
 class SwitchTableViewCellWithTextField: SwitchTableViewCell {
     @IBOutlet weak var textField: UITextField!
 
@@ -22,6 +25,8 @@ class SwitchTableViewCellWithTextField: SwitchTableViewCell {
 extension SwitchTableViewCellWithTextField: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         endEditing(true)
+        (delegate as? SwitchTableViewCellWithTextFieldDelegate)?.keyboardDismissed()
+        
         return true
     }
 }
