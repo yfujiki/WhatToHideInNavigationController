@@ -10,24 +10,36 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    private class Item {
+        var title: String
+        var description: String
+        var switched: Bool
+
+        init(_ title: String, _ description: String, _ switched: Bool) {
+            self.title = title
+            self.description = description
+            self.switched = switched
+        }
+    }
+
     @IBOutlet weak var tableView: UITableView!
 
-    private let hidingList: [String: [String: String]] = [
+    private var hidingList: [String: [Item]] = [
         "UINavigationController": [
-            "setNavigationBarHidden(:, animated:)": "Hides navigation bar.",
-            "setToolBarHidden(:, animated:)": "Hides toolbar",
-            "hidesBarsOnTap": "Navigation/Toolbars hide when you tap on the bars",
-            "hidesBarsOnSwipe": "Navigation/Toolbars hide when you swipe up/down the scroll view",
-            "hidesBarsWhenVerticallCompact": "Navigation/Toolbars hide when you rotate horizontally on the phone devices (except for plus and X devices)",
-            "hidesBarsWhenKeyboardAppears": "Navigation/Toolbars hide when keyboard appears"
+            Item("setNavigationBarHidden(:, animated:)", "Hides navigation bar.", false),
+            Item("setToolBarHidden(:, animated:)", "Hides toolbar", false),
+            Item("hidesBarsOnTap", "Navigation/Toolbars hide when you tap on the main view", false),
+            Item("hidesBarsOnSwipe", "Navigation/Toolbars hide when you swipe up/down the scroll view", false),
+            Item("hidesBarsWhenVerticallyCompact", "Navigation/Toolbars hide when you rotate horizontally on the phone devices (except for plus and X devices)", false),
+            Item("hidesBarsWhenKeyboardAppears", "Navigation/Toolbars hide when keyboard appears", false)
         ],
         "UINavigationItem": [
-            "hidesSearchBarWhenScrolling": "Hides search bar on the bottom of navigation bar when scrolling the scrollview"
+            Item("hidesSearchBarWhenScrolling", "Hides search bar on the bottom of navigation bar when scrolling the scrollview", false)
         ],
         "UIViewController": [
-            "prefersStatusBarHidden (override)": "Hides status bar when this view controller is visible",
-            "prefersHomeIndicatorAutoHidden (override)": "Hides home indicator (back button) when this view controller is shown",
-            "hidesBottomBarWhenPushed": "Hides bottom bar when this view controller is visible"
+            Item("prefersStatusBarHidden (override)", "Hides status bar when this view controller is visible", false),
+            Item("prefersHomeIndicatorAutoHidden (override)", "Hides home indicator (back button) when this view controller is shown", false),
+            Item("hidesBottomBarWhenPushed", "Hides bottom bar when this view controller is visible", false)
         ]
     ]
 
@@ -35,6 +47,17 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         title = "What to hide on navigation controller"
         tableView.register(UINib(nibName: "SwitchTableViewCell", bundle: nil), forCellReuseIdentifier: "switchTableViewCell")
+
+        prepareToolBar()
+    }
+
+    private func prepareToolBar() {
+        let actionItem = UIBarButtonItem(barButtonSystemItem: .action, target: nil, action: nil)
+        let spacerItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let saveItem = UIBarButtonItem(barButtonSystemItem: .save, target: nil, action: nil)
+        toolbarItems = [actionItem, spacerItem, saveItem]
+
+        navigationController?.setToolbarHidden(false, animated: false)
     }
 }
 
@@ -57,18 +80,68 @@ extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let sectionTitle = Array(hidingList.keys.sorted())[indexPath.section]
         let listInSection = hidingList[sectionTitle]!
-        let rowTitle = Array(listInSection.keys.sorted())[indexPath.row]
-        let rowDescription = listInSection[rowTitle]
+        let rowItem = listInSection[indexPath.row]
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "switchTableViewCell") as! SwitchTableViewCell
-        cell.titleLabel.text = rowTitle
-        cell.descriptionLabel.text = rowDescription
-        cell.switch.isOn = false
+        cell.titleLabel.text = rowItem.title
+        cell.descriptionLabel.text = NSLocalizedString(rowItem.description, comment: "")
+        cell.switch.isOn = rowItem.switched
+        cell.delegate = self
 
         return cell
     }
-
 }
 
+extension ViewController: SwitchTableViewCellDelegate {
+    func switched(isOn: Bool, for title: String?) {
+        switch title {
+        case "setNavigationBarHidden(:, animated:)":
+            self.navigationController?.setNavigationBarHidden(isOn, animated: true)
+        case "setToolBarHidden(:, animated:)":
+            self.navigationController?.setToolbarHidden(isOn, animated: true)
+        case "hidesBarsOnTap":
+            self.navigationController?.hidesBarsOnTap = isOn
+            if (!isOn) {
+                unhideBars()
+            }
+        case "hidesBarsOnSwipe":
+            self.navigationController?.hidesBarsOnSwipe = isOn
+            if (!isOn) {
+                unhideBars()
+            }
+        case "hidesBarsWhenVerticallyCompact":
+            self.navigationController?.hidesBarsWhenVerticallyCompact = isOn
+            if (!isOn) {
+                unhideBars()
+            }
+        case "hidesBarsWhenKeyboardAppears":
+            self.navigationController?.hidesBarsWhenKeyboardAppears = isOn
+            if (!isOn) {
+                unhideBars()
+            }
+        default:
+            break
+        }
+
+        hidingList.forEach { (_, items) in
+            items.forEach({ (item) in
+                if item.title == title {
+                    item.switched = isOn
+                }
+            })
+        }
+    }
+
+    private func unhideBars() {
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        self.navigationController?.setToolbarHidden(false, animated: false)
+    }
+}
+
+extension ViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
+}
 
 

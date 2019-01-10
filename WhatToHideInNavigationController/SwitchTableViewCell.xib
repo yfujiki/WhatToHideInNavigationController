@@ -27,6 +27,9 @@
                     </label>
                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pbs-9a-zBR">
                         <rect key="frame" x="261" y="16" width="51" height="31"/>
+                        <connections>
+                            <action selector="switched:" destination="KGk-i7-Jjw" eventType="valueChanged" id="uXN-vm-HT7"/>
+                        </connections>
                     </switch>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Description Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LWY-kJ-6Jz">
                         <rect key="frame" x="16" y="44.5" width="237" height="21"/>
