@@ -22,6 +22,30 @@ class ViewController: UIViewController {
         }
     }
 
+    private var statusBarHidden = false {
+        didSet {
+            if let items = hidingList["3. UIViewController"]  {
+                items.forEach { (item) in
+                    if item.title == "prefersStatusBarHidden (override)" {
+                        item.switched = self.statusBarHidden
+                    }
+                }
+            }
+        }
+    }
+
+    private var homeIndicatorAutoHidden = false {
+        didSet {
+            if let items = hidingList["3. UIViewController"]  {
+                items.forEach { (item) in
+                    if item.title == "prefersHomeIndicatorAutoHidden (override)" {
+                        item.switched = self.homeIndicatorAutoHidden
+                    }
+                }
+            }
+        }
+    }
+
     @IBOutlet weak var tableView: UITableView!
 
     private var hidingList: [String: [Item]] = [
@@ -38,8 +62,7 @@ class ViewController: UIViewController {
         ],
         "3. UIViewController": [
             Item("prefersStatusBarHidden (override)", "Hides status bar when this view controller is visible", false),
-            Item("prefersHomeIndicatorAutoHidden (override)", "Hides home indicator (back button) when this view controller is shown", false),
-            Item("hidesBottomBarWhenPushed", "Hides bottom bar when this view controller is visible", false)
+            Item("prefersHomeIndicatorAutoHidden (override)", "Hides home indicator (existing only for edge to edge screen devices) when this view controller is shown", false)
         ]
     ]
 
@@ -78,6 +101,14 @@ class ViewController: UIViewController {
 
         NSLog("Content inset top : \(tableView.contentInset.top)")
     }
+
+    override var prefersStatusBarHidden: Bool {
+        return statusBarHidden
+    }
+
+    override var prefersHomeIndicatorAutoHidden: Bool {
+        return homeIndicatorAutoHidden
+    }
 }
 
 extension ViewController: UITableViewDataSource {
@@ -115,6 +146,8 @@ extension ViewController: SwitchTableViewCellDelegate {
     func switched(isOn: Bool, for title: String?) {
         unhideBars()
 
+        var pushingNewViewController = false
+
         switch title {
         case "setNavigationBarHidden(:, animated:)":
             self.navigationController?.setNavigationBarHidden(isOn, animated: true)
@@ -130,9 +163,31 @@ extension ViewController: SwitchTableViewCellDelegate {
             self.navigationController?.hidesBarsWhenKeyboardAppears = isOn
         case "hidesSearchBarWhenScrolling":
             self.navigationItem.hidesSearchBarWhenScrolling = true
-
+        case "prefersStatusBarHidden (override)":
+            if (isOn) {
+                let viewControllerWithNoStatusBar = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ViewController") as! ViewController
+                viewControllerWithNoStatusBar.statusBarHidden = true
+                navigationController?.pushViewController(viewControllerWithNoStatusBar, animated: true)
+                pushingNewViewController = true
+            } else {
+                navigationController?.popViewController(animated: true)
+            }
+        case "prefersHomeIndicatorAutoHidden (override)":
+            if (isOn) {
+                let viewControllerWithNoHomeIndicator = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ViewController") as! ViewController
+                viewControllerWithNoHomeIndicator.homeIndicatorAutoHidden = true
+                navigationController?.pushViewController(viewControllerWithNoHomeIndicator, animated: true)
+                pushingNewViewController = true
+            } else {
+                navigationController?.popViewController(animated: true)
+            }
         default:
             break
+        }
+
+        if pushingNewViewController {
+            tableView.reloadData()
+            return
         }
 
         hidingList.forEach { (_, items) in
@@ -150,8 +205,11 @@ extension ViewController: SwitchTableViewCellDelegate {
     }
 
     private func unhideBars() {
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
-        self.navigationController?.setToolbarHidden(false, animated: false)
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.setToolbarHidden(false, animated: false)
+        statusBarHidden = false
+
+        view.setNeedsLayout()
     }
 }
 
