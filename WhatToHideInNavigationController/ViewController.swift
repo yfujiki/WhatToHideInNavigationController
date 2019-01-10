@@ -26,11 +26,11 @@ class ViewController: UIViewController {
 
     private var hidingList: [String: [Item]] = [
         "1. UINavigationItem": [
-            Item("hidesSearchBarWhenScrolling", "Hides search bar on the bottom of navigation bar when scrolling the scrollview", false)
+            Item("hidesSearchBarWhenScrolling", "Hides search bar on the bottom of navigation bar when scrolling the scrollview (hidden by default)", false)
         ],
         "2. UINavigationController": [
             Item("setNavigationBarHidden(:, animated:)", "Hides navigation bar.", false),
-            Item("setToolBarHidden(:, animated:)", "Hides toolbar", false),
+            Item("setToolBarHidden(:, animated:)", "Hides toolbar (hidden by default)", false),
             Item("hidesBarsOnTap", "Navigation/Toolbars hide when you tap on the main view", false),
             Item("hidesBarsOnSwipe", "Navigation/Toolbars hide when you swipe up/down the scroll view", false),
             Item("hidesBarsWhenVerticallyCompact", "Navigation/Toolbars hide when you rotate horizontally on the phone devices (except for plus and X devices)", false),
