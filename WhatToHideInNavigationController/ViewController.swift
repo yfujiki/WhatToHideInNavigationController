@@ -96,14 +96,10 @@ class ViewController: UIViewController {
     private func showSearchBar() {
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
-
-        NSLog("Content inset top : \(tableView.contentInset.top)")
     }
 
     private func hideSearchBar() {
         navigationItem.searchController = nil
-
-        NSLog("Content inset top : \(tableView.contentInset.top)")
     }
 
     override var prefersStatusBarHidden: Bool {
