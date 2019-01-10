@@ -25,7 +25,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
 
     private var hidingList: [String: [Item]] = [
-        "UINavigationController": [
+        "1. UINavigationItem": [
+            Item("hidesSearchBarWhenScrolling", "Hides search bar on the bottom of navigation bar when scrolling the scrollview", false)
+        ],
+        "2. UINavigationController": [
             Item("setNavigationBarHidden(:, animated:)", "Hides navigation bar.", false),
             Item("setToolBarHidden(:, animated:)", "Hides toolbar", false),
             Item("hidesBarsOnTap", "Navigation/Toolbars hide when you tap on the main view", false),
@@ -33,10 +36,7 @@ class ViewController: UIViewController {
             Item("hidesBarsWhenVerticallyCompact", "Navigation/Toolbars hide when you rotate horizontally on the phone devices (except for plus and X devices)", false),
             Item("hidesBarsWhenKeyboardAppears", "Navigation/Toolbars hide when keyboard appears", false)
         ],
-        "UINavigationItem": [
-            Item("hidesSearchBarWhenScrolling", "Hides search bar on the bottom of navigation bar when scrolling the scrollview", false)
-        ],
-        "UIViewController": [
+        "3. UIViewController": [
             Item("prefersStatusBarHidden (override)", "Hides status bar when this view controller is visible", false),
             Item("prefersHomeIndicatorAutoHidden (override)", "Hides home indicator (back button) when this view controller is shown", false),
             Item("hidesBottomBarWhenPushed", "Hides bottom bar when this view controller is visible", false)
@@ -45,9 +45,10 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "What to hide on navigation controller"
+        title = NSLocalizedString("What to hide around navigation controller", comment: "")
         tableView.register(UINib(nibName: "SwitchTableViewCell", bundle: nil), forCellReuseIdentifier: "switchTableViewCell")
 
+        showSearchBar()
         prepareToolBar()
     }
 
@@ -58,6 +59,24 @@ class ViewController: UIViewController {
         toolbarItems = [actionItem, spacerItem, saveItem]
 
         navigationController?.setToolbarHidden(false, animated: false)
+    }
+
+    lazy var searchController: UISearchController = {
+        let controller = UISearchController(searchResultsController: nil)
+        return controller
+    }()
+
+    private func showSearchBar() {
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+
+        NSLog("Content inset top : \(tableView.contentInset.top)")
+    }
+
+    private func hideSearchBar() {
+        navigationItem.searchController = nil
+
+        NSLog("Content inset top : \(tableView.contentInset.top)")
     }
 }
 
@@ -94,6 +113,8 @@ extension ViewController: UITableViewDataSource {
 
 extension ViewController: SwitchTableViewCellDelegate {
     func switched(isOn: Bool, for title: String?) {
+        unhideBars()
+
         switch title {
         case "setNavigationBarHidden(:, animated:)":
             self.navigationController?.setNavigationBarHidden(isOn, animated: true)
@@ -101,24 +122,15 @@ extension ViewController: SwitchTableViewCellDelegate {
             self.navigationController?.setToolbarHidden(isOn, animated: true)
         case "hidesBarsOnTap":
             self.navigationController?.hidesBarsOnTap = isOn
-            if (!isOn) {
-                unhideBars()
-            }
         case "hidesBarsOnSwipe":
             self.navigationController?.hidesBarsOnSwipe = isOn
-            if (!isOn) {
-                unhideBars()
-            }
         case "hidesBarsWhenVerticallyCompact":
             self.navigationController?.hidesBarsWhenVerticallyCompact = isOn
-            if (!isOn) {
-                unhideBars()
-            }
         case "hidesBarsWhenKeyboardAppears":
             self.navigationController?.hidesBarsWhenKeyboardAppears = isOn
-            if (!isOn) {
-                unhideBars()
-            }
+        case "hidesSearchBarWhenScrolling":
+            self.navigationItem.hidesSearchBarWhenScrolling = true
+
         default:
             break
         }
@@ -128,8 +140,13 @@ extension ViewController: SwitchTableViewCellDelegate {
                 if item.title == title {
                     item.switched = isOn
                 }
+                if item.switched && item.title != title {
+                    item.switched = false
+                }
             })
         }
+
+        tableView.reloadData()
     }
 
     private func unhideBars() {
@@ -144,4 +161,8 @@ extension ViewController: UITableViewDelegate {
     }
 }
 
-
+extension ViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        NSLog("Update search results.")
+    }
+}
