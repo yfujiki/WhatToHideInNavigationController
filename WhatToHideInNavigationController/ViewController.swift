@@ -55,15 +55,18 @@ class ViewController: UIViewController {
         "2. UISearchController": [
             Item("hidesNavigationBarDuringPresentation", "Hides navigation bar when search is active (hidden by default)", false)
         ],
-        "3. UINavigationController": [
+        "3. UINavigationBar": [
+            Item("prefersLargeTitle", "Not exactly hiding anything, but the navigation shows in different size when you scroll to the top.", false)
+        ],
+        "4. UINavigationController": [
             Item("setNavigationBarHidden(:, animated:)", "Hides navigation bar.", false),
             Item("setToolBarHidden(:, animated:)", "Hides Toolbar (hidden by default)", false),
             Item("hidesBarsOnTap", "Hides Navigation/Toolbars when you tap on the main view", false),
             Item("hidesBarsOnSwipe", "Hides Navigation/Toolbars when you swipe up the scroll view", false),
-            Item("hidesBarsWhenVerticallyCompact", "Hides Navigation/Toolbars when you rotate horizontally on the phone devices (except for plus and X devices)", false),
+            Item("hidesBarsWhenVerticallyCompact", "Hides Navigation/Toolbars on landscape view of the phone devices (except for plus and X devices)", false),
             Item("hidesBarsWhenKeyboardAppears", "Hides Navigation/Toolbars when keyboard appears", false)
         ],
-        "4. UIViewController": [
+        "5. UIViewController": [
             Item("prefersStatusBarHidden (override)", "Hides status bar when this view controller is visible", false),
             Item("prefersHomeIndicatorAutoHidden (override)", "Hides home indicator (existing only for edge to edge screen devices) when this view controller is shown", false)
         ]
@@ -156,7 +159,7 @@ extension ViewController: UITableViewDataSource {
 
 extension ViewController: SwitchTableViewCellDelegate {
     func switched(isOn: Bool, for title: String?) {
-        unhideBars()
+        reset()
 
         var pushingNewViewController = false
 
@@ -195,6 +198,8 @@ extension ViewController: SwitchTableViewCellDelegate {
             } else {
                 navigationController?.popViewController(animated: true)
             }
+        case "prefersLargeTitle":
+            self.navigationController?.navigationBar.prefersLargeTitles = isOn
         default:
             break
         }
@@ -218,12 +223,18 @@ extension ViewController: SwitchTableViewCellDelegate {
         tableView.reloadData()
     }
 
-    private func unhideBars() {
+    private func reset() {
         navigationController?.setNavigationBarHidden(false, animated: false)
         navigationController?.setToolbarHidden(false, animated: false)
-        statusBarHidden = false
 
-        view.setNeedsLayout()
+        statusBarHidden = false
+        homeIndicatorAutoHidden = false
+
+        navigationController?.hidesBarsOnTap = false
+        navigationController?.hidesBarsOnSwipe = false
+        navigationController?.hidesBarsWhenVerticallyCompact = false
+        navigationController?.hidesBarsWhenKeyboardAppears = false
+        navigationController?.navigationBar.prefersLargeTitles = false
     }
 }
 
