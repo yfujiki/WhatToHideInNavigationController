@@ -52,15 +52,18 @@ class ViewController: UIViewController {
         "1. UINavigationItem": [
             Item("hidesSearchBarWhenScrolling", "Hides search bar on the bottom of navigation bar when scrolling the scrollview (hidden by default)", false)
         ],
-        "2. UINavigationController": [
+        "2. UISearchController": [
+            Item("hidesNavigationBarDuringPresentation", "Hides navigation bar when search is active (hidden by default)", false)
+        ],
+        "3. UINavigationController": [
             Item("setNavigationBarHidden(:, animated:)", "Hides navigation bar.", false),
             Item("setToolBarHidden(:, animated:)", "Hides toolbar (hidden by default)", false),
             Item("hidesBarsOnTap", "Navigation/Toolbars hide when you tap on the main view", false),
-            Item("hidesBarsOnSwipe", "Navigation/Toolbars hide when you swipe up/down the scroll view", false),
+            Item("hidesBarsOnSwipe", "Navigation/Toolbars hide when you swipe up the scroll view", false),
             Item("hidesBarsWhenVerticallyCompact", "Navigation/Toolbars hide when you rotate horizontally on the phone devices (except for plus and X devices)", false),
             Item("hidesBarsWhenKeyboardAppears", "Navigation/Toolbars hide when keyboard appears", false)
         ],
-        "3. UIViewController": [
+        "4. UIViewController": [
             Item("prefersStatusBarHidden (override)", "Hides status bar when this view controller is visible", false),
             Item("prefersHomeIndicatorAutoHidden (override)", "Hides home indicator (existing only for edge to edge screen devices) when this view controller is shown", false)
         ]
@@ -86,6 +89,7 @@ class ViewController: UIViewController {
 
     lazy var searchController: UISearchController = {
         let controller = UISearchController(searchResultsController: nil)
+        controller.hidesNavigationBarDuringPresentation = false
         return controller
     }()
 
@@ -162,7 +166,9 @@ extension ViewController: SwitchTableViewCellDelegate {
         case "hidesBarsWhenKeyboardAppears":
             self.navigationController?.hidesBarsWhenKeyboardAppears = isOn
         case "hidesSearchBarWhenScrolling":
-            self.navigationItem.hidesSearchBarWhenScrolling = true
+            self.navigationItem.hidesSearchBarWhenScrolling = isOn
+        case "hidesNavigationBarDuringPresentation":
+            self.searchController.hidesNavigationBarDuringPresentation = isOn
         case "prefersStatusBarHidden (override)":
             if (isOn) {
                 let viewControllerWithNoStatusBar = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ViewController") as! ViewController
