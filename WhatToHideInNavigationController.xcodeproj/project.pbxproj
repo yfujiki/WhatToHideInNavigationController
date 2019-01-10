@@ -15,6 +15,8 @@
 		DB2D106B21E7B00C008DFF5E /* WhatToHideInNavigationControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2D106A21E7B00C008DFF5E /* WhatToHideInNavigationControllerTests.swift */; };
 		DB2D107921E7B584008DFF5E /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2D107721E7B584008DFF5E /* SwitchTableViewCell.swift */; };
 		DB2D107A21E7B584008DFF5E /* SwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = DB2D107821E7B584008DFF5E /* SwitchTableViewCell.xib */; };
+		DBA6AA8C21E7EF9B00C1E3BB /* SwitchTableViewCellWithTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBA6AA8A21E7EF9B00C1E3BB /* SwitchTableViewCellWithTextField.swift */; };
+		DBA6AA8D21E7EF9B00C1E3BB /* SwitchTableViewCellWithTextField.xib in Resources */ = {isa = PBXBuildFile; fileRef = DBA6AA8B21E7EF9B00C1E3BB /* SwitchTableViewCellWithTextField.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,6 +42,8 @@
 		DB2D106C21E7B00C008DFF5E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DB2D107721E7B584008DFF5E /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		DB2D107821E7B584008DFF5E /* SwitchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchTableViewCell.xib; sourceTree = "<group>"; };
+		DBA6AA8A21E7EF9B00C1E3BB /* SwitchTableViewCellWithTextField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCellWithTextField.swift; sourceTree = "<group>"; };
+		DBA6AA8B21E7EF9B00C1E3BB /* SwitchTableViewCellWithTextField.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SwitchTableViewCellWithTextField.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +93,8 @@
 				DB2D106121E7B00C008DFF5E /* Info.plist */,
 				DB2D107721E7B584008DFF5E /* SwitchTableViewCell.swift */,
 				DB2D107821E7B584008DFF5E /* SwitchTableViewCell.xib */,
+				DBA6AA8A21E7EF9B00C1E3BB /* SwitchTableViewCellWithTextField.swift */,
+				DBA6AA8B21E7EF9B00C1E3BB /* SwitchTableViewCellWithTextField.xib */,
 			);
 			path = WhatToHideInNavigationController;
 			sourceTree = "<group>";
@@ -184,6 +190,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB2D106021E7B00C008DFF5E /* LaunchScreen.storyboard in Resources */,
+				DBA6AA8D21E7EF9B00C1E3BB /* SwitchTableViewCellWithTextField.xib in Resources */,
 				DB2D107A21E7B584008DFF5E /* SwitchTableViewCell.xib in Resources */,
 				DB2D105D21E7B00C008DFF5E /* Assets.xcassets in Resources */,
 				DB2D105B21E7B00B008DFF5E /* Main.storyboard in Resources */,
@@ -207,6 +214,7 @@
 				DB2D105821E7B00B008DFF5E /* ViewController.swift in Sources */,
 				DB2D105621E7B00B008DFF5E /* AppDelegate.swift in Sources */,
 				DB2D107921E7B584008DFF5E /* SwitchTableViewCell.swift in Sources */,
+				DBA6AA8C21E7EF9B00C1E3BB /* SwitchTableViewCellWithTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

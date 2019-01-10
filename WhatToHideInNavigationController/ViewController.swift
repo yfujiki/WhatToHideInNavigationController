@@ -76,6 +76,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         title = NSLocalizedString("What to hide around navigation controller", comment: "")
         tableView.register(UINib(nibName: "SwitchTableViewCell", bundle: nil), forCellReuseIdentifier: "switchTableViewCell")
+        tableView.register(UINib(nibName: "SwitchTableViewCellWithTextField", bundle: nil), forCellReuseIdentifier: "switchTableViewCellWithTextField")
 
         showSearchBar()
         prepareToolBar()
@@ -135,7 +136,12 @@ extension ViewController: UITableViewDataSource {
         let listInSection = hidingList[sectionTitle]!
         let rowItem = listInSection[indexPath.row]
 
-        let cell = tableView.dequeueReusableCell(withIdentifier: "switchTableViewCell") as! SwitchTableViewCell
+        var cell: SwitchTableViewCell!
+        if (rowItem.title == "hidesBarsWhenKeyboardAppears") {
+            cell = tableView.dequeueReusableCell(withIdentifier: "switchTableViewCellWithTextField") as? SwitchTableViewCell
+        } else {
+            cell = tableView.dequeueReusableCell(withIdentifier: "switchTableViewCell") as? SwitchTableViewCell
+        }
         cell.titleLabel.text = rowItem.title
         cell.descriptionLabel.text = NSLocalizedString(rowItem.description, comment: "")
         cell.switch.isOn = rowItem.switched
