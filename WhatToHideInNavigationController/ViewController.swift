@@ -57,11 +57,11 @@ class ViewController: UIViewController {
         ],
         "3. UINavigationController": [
             Item("setNavigationBarHidden(:, animated:)", "Hides navigation bar.", false),
-            Item("setToolBarHidden(:, animated:)", "Hides toolbar (hidden by default)", false),
-            Item("hidesBarsOnTap", "Navigation/Toolbars hide when you tap on the main view", false),
-            Item("hidesBarsOnSwipe", "Navigation/Toolbars hide when you swipe up the scroll view", false),
-            Item("hidesBarsWhenVerticallyCompact", "Navigation/Toolbars hide when you rotate horizontally on the phone devices (except for plus and X devices)", false),
-            Item("hidesBarsWhenKeyboardAppears", "Navigation/Toolbars hide when keyboard appears", false)
+            Item("setToolBarHidden(:, animated:)", "Hides Toolbar (hidden by default)", false),
+            Item("hidesBarsOnTap", "Hides Navigation/Toolbars when you tap on the main view", false),
+            Item("hidesBarsOnSwipe", "Hides Navigation/Toolbars when you swipe up the scroll view", false),
+            Item("hidesBarsWhenVerticallyCompact", "Hides Navigation/Toolbars when you rotate horizontally on the phone devices (except for plus and X devices)", false),
+            Item("hidesBarsWhenKeyboardAppears", "Hides Navigation/Toolbars when keyboard appears", false)
         ],
         "4. UIViewController": [
             Item("prefersStatusBarHidden (override)", "Hides status bar when this view controller is visible", false),
