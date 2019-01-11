@@ -3,38 +3,37 @@
 ![twitter](https://img.shields.io/badge/twitter-@yfujiki-blue.svg)
 
 ## Overview
-There are many options you can tweak and hide around `UINavigationController`. For example, calling `UINavigationController.setNavigationBarHidden(true:, animated: true)` will hide navigation bar. Or, `UINavigationController.hidesBarsOnTap = true` will hide both navigation bar and bottom tool bar (if present) when you tap on the main view.
+`UINavigationController`周りで、調整したり隠したりできるオプションは結構沢山あります。例えば、 `UINavigationController.setNavigationBarHidden（true :, animated：true）`を呼び出すとナビゲーションバーが隠れます。あるいは、 `UINavigationController.hidesBarsOnTap = true`を選択してメインビューをタップすると、ナビゲーションバーと下部ツールバー（存在する場合）の両方が非表示になります。
 
-This repo summarizes/demonstrates those hide actions. 
+このレポジトリは、それらの非表示アクションを要約することを目的としています。(2019/01/11 現在)
 
-Example actions : 
+例 : 
 ![Demo](./hideBars.gif)
 
 ## `UINavigationController`
 ### `setNavigationBarHidden(:, animated:)`
-You can hide navigation bar by calling `navigationController?.setNavigationBarHidden(true, animated: true)`.
+`navigationController？.setNavigationBarHidden（true、animated：true）`を呼び出すことでナビゲーションバーを隠すことができます。
 
 ### `setToolBarHidden(:, animated:)`
-You can hide tool bar on the bottom by calling `navigationController?.setToolbarHidden(true, animated: true)`.
+`navigationController？.setToolbarHidden（true、animated：true）`を呼び出すことで下部のツールバーを隠すことができます。
 
-The toolbar is hidden by default though. In order to show toolbar, you need to set `BarButtonItems` into the toolbar. e.g.,
+ただし、ツールバーはデフォルトで非表示になっているので、明示的に指定する必要はありません。ツールバーを表示するには、ツールバーに `BarButtonItems`を設定する必要があります。例えば、
 
 ```
 let actionItem = UIBarButtonItem(barButtonSystemItem: .action, target: nil, action: nil)
 let spacerItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 let saveItem = UIBarButtonItem(barButtonSystemItem: .save, target: nil, action: nil)
 toolbarItems = [actionItem, spacerItem, saveItem]
-
-navigationController?.setToolbarHidden(false, animated: false)
 ```
+としてやります。
 
 ### `hidesBarsOnTap`
-If you tap on the main view after setting `navigationController?.hidesBarsOnTap = true`, then both navigation bar and tool bar will toggle.
+`navigationController？.hidesBarsOnTap = true`を設定した後にメインビューをタップすると、ナビゲーションバーとツールバーの両方が切り替わります。
 
 ### `hidesOnSwipe`
-If you swipe up from the bottom of the screen after setting `navigationController?.hidesOnSwipe = true`, then both navigation bar and tool bar will hide. However, contrary to the expectation, swiping down does not bring the bars back. Once you hide the bars with swipe, those bars are basically gone. Not sure if this is an expected behavior or iOS bug, but there are quite a few Stackoverflow posts that complaint about this behavior. (e.g, https://stackoverflow.com/questions/32992897/hidesbarsonswipe-does-not-show-navigationbar-when-scrolling-up-to-the-top-slowly)
+`navigationController？.hidesOnSwipe = true`を設定した後に画面の下から上にスワイプをすると、ナビゲーションバーとツールバーの両方が非表示になります。ただし、期待に反して、スワイプダウンをしてもバーは元に戻りません。すなわち一旦バーを隠すと、バーは二度と戻って来なくなります。これが期待通りの動作なのかiOSのバグなのかわかりませんが、これについて不満を言っているStackoverflow の投稿は結構あります。 例：https://stackoverflow.com/questions/32992897/hidesbarsonswipe-does-not-show-navigationbar-when-scrolling-up-to-the-top-slowly）
 
-One work-around is to show them again when the first row becomes visible. 
+1つの回避策は、(スクロールビューとして　`UITableView` を使っている場合)一番上の行が表示されたときにそれらを再度表示することです。
 
 ```
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -49,30 +48,31 @@ One work-around is to show them again when the first row becomes visible.
 ```
 
 ### `hidesBarsWhenVerticallyCompact`
-If you rotate your device to landscape orientation after setting `navigationController?.hidesBarsWhenVerticallyCompact = true`, then both navigation bar and tool bar will hide. Rotating back to the portrait orientation will bring them back.
+`navigationController？.hidesBarsWhenVerticallyCompact = true`を設定した後にデバイスを横向きに回転させると、ナビゲーションバーとツールバーの両方が隠れます。縦向きに戻すと元に戻ります。
 
 ### `hidesBarsWhenKeyboardAppears`
-If you bring on the keyboard after setting `navigationController?.hidesBarsWhenKeyboardAppears = true`, then both navigation bar and tool bar will hide. However, contrary to expectation, dismissing keyboard will not bring them back. In this demo, we capture `UITextFieldDelegate.textFieldShouldReturn(_:)` and bringing the bars back manually.
+`navigationController？.hidesBarsWhenKeyboardAppears = true`を設定した後にキーボードを起動すると、ナビゲーションバーとツールバーの両方が非表示になります。しかし、期待に反して、キーボードを収納しても元には戻りません。このデモでは、 `UITextFieldDelegate.textFieldShouldReturn（_ :)`をキャプチャして手動でバーを元に戻します。
 
 ```
     navigationController?.setNavigationBarHidden(false, animated: true)
     navigationController?.setToolbarHidden(false, animated: true)
 ```
 
-Another pitfall, which I think is a bug of iOS: Once you set this flag to `true`, the behavior persists even after setting it to `false`. I guess it is not very common to switch this settings within the lifetime of a `UIViewController`, so it is practically ok.
+もう 1つの落とし穴は、このフラグを `true`に設定すると、あとでフラグを`false`に設定した後も `true` である時の動作が持続することです。これはiOSのバグだと思いますが、このフラグを `UIViewController`の有効期間内に切り替えるのはあまり一般的ではないので、実際に問題になることはあまりないのでしょう。
 
-Also, don't set this to `true` when you have search bar under navigation bar by setting `UINavigationItem.searchController`. When you try to search something, keyboard pops up and thus hides the search bar because it is part of the navigation bar. 
+また、 `UINavigationItem.searchController` を設定してナビゲーションバーの下に検索バーを実装した時は、このフラグを `true` に設定しないこと。何かを検索しようとすると、キーボードがポップアップして、ナビゲーションバーを隠しますが、検索バーもナビゲーションバーの一部なので、検索バー自体が見えなくなります。検索したいのに検索バーが見えないというよくわからない状態になってしまいます。このデモはサンプラーなのでこの禁忌を犯していて、おかしな挙動が見られます。
+
 ## `UINavigationBar`
 ### `hidesSearchBarWhenScrolling`
-Assume search bar is set up under navigation bar by having setting `navigationItem.searchController`. If you scroll up the table view after setting `navigationItem.hidesSearchBarWhenScrolling = true`, the search bar under navigation bar will collapse. It will expand to show up again when you scroll down the table view. The value is `true` by default, so if you want to always keep search bar, then set it to `false`.
+`navigationItem.searchController`を設定することで、検索バーをナビゲーションバーの下に実装していると仮定します。 `navigationItem.hidesSearchBarWhenScrolling = true`を設定した後にスクロールビューを上にスクロールすると、ナビゲーションバーの下の検索バーは折りたたまれます。スクロールビューを下にスクロールすると、拡大して再び表示されます。デフォルト値は `true`です。したがって、検索バーを常に保持したい場合は、逆にこれを `false`に設定してください。
 
 ## `UISearchController`
 ### `hidesNavigationBarDuringPresentation`
-Assume search bar is set up under navigation bar by having setting `navigationItem.searchController`. If you tap on the search bar after setting `navigationItem.searchController.hidesNavigationBarDuringPresentation = true`, then navigation bar will hide and only search bar will occupy the top portion. The value is `true` by default, so if you want to keep navigation bar while conducting search, set it to `false`.
+`navigationItem.searchController`を設定することで、検索バーをナビゲーションバーの下に実装していると仮定します。 `navigationItem.searchController.hidesNavigationBarDuringPresentation = true`を設定した後に検索バーをタップすると、ナビゲーションバーは非表示になり、検索バーのみが上部に表示されます。デフォルト値は `true`ですので、検索をしている間ナビゲーションバーをキープしたい場合は、逆にこれを `false`に設定してください。
 
 ## `UIViewController`
-### `prefersStatusBarHidden()`
-If you override this method and return `true`, status bar will be hidden.
+### `prefersStatusBarHidden`
+この computed variable をオーバーライドして　`true` を返すと、ステータスバーは非表示になります。
 
 ```
 
@@ -88,10 +88,10 @@ override var prefersStatusBarHidden: Bool {
     setNeedsStatusBarAppearanceUpdate()
 ```
 
-You need to call `setNeedsStatusBarAppearanceUpdate()` for rendering to occur. It doesn't work on edge-to-edge device like iPhone X. Status bar is still visible after running code above. I guess it doesn't make sense to hide status bar on those devices because of the notch area (it would look bad because navigation bar would overlap notch area.)
+オーバーライドした computed variable を呼び出してレンダリングを行うためには `setNeedsStatusBarAppearanceUpdate()` を呼び出す必要があるというところは一つのポイントです。また、この設定は  iPhone Xのような端から端までのデバイスでは動作せず、ステータスバーは常に表示されています。おそらく、そもそもノッチ領域にあるステータスバーを隠すのは意味がないということだと思います（ナビゲーションバーがノッチ領域と重なってしまうのでおかしな見栄えになる）
 
-### `homeIndicatorAutoHidden()`
-If you override this method and return `true`, the thin white bar that indicates the home button on edge-to-edge screen, will fade away. 
+### `homeIndicatorAutoHidden`
+この computed variable をオーバーライドして `true` を返すと、iPhone X などの edge-to-edge のディスプレイで、ホームボタンの場所を示す細くて白いバーが消えます。
 
 ```
 
@@ -107,8 +107,8 @@ override var prefersHomeIndicatorAutoHidden: Bool {
     setNeedsUpdateOfHomeIndicatorAutoHidden()
 ```
 
-You need to call `setNeedsUpdateOfHomeIndicatorAutoHidden()` for rendering to occur.
+オーバーライドした computed variable を呼び出してレンダリングを行うためには `setNeedsUpdateOfHomeIndicatorAutoHidden（）`を呼び出す必要があります。
 
 ## `UINavigationBar`
 ### `prefersLargeTitle`
-You set `self.navigationController?.navigationBar.prefersLargeTitles = true` and scroll up and down the table view. When you scroll up, you will see small navigation bar, and large navigation bar on scrolling down. This is technically not hiding anything, but thought is relevant.
+`self.navigationController？.navigationBar.prefersLargeTitles = true` としてスクロールビューを上にスクロールするとナビゲーションバーが小さくなり、下にスクロールするとナビゲーションバーが大きく表示されます。この動作は何かを隠しているという訳ではないけれども、類似の特筆すべき振る舞いとしてリストしました。
