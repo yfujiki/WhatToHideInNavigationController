@@ -63,7 +63,7 @@ class ViewController: UIViewController {
             Item("setToolBarHidden(:, animated:)", "Hides Toolbar (hidden by default)", false),
             Item("hidesBarsOnTap", "Hides Navigation/Toolbars when you tap on the main view", false),
             Item("hidesBarsOnSwipe", "Hides Navigation/Toolbars when you swipe up the scroll view from bottom", false),
-            Item("hidesBarsWhenVerticallyCompact", "Hides Navigation/Toolbars on landscape view of the phone devices (except for plus and X devices)", false),
+            Item("hidesBarsWhenVerticallyCompact", "Hides Navigation/Toolbars on landscape view of the phone devices", false),
             Item("hidesBarsWhenKeyboardAppears", "Hides Navigation/Toolbars when keyboard appears", false)
         ],
         "5. UIViewController": [
@@ -167,52 +167,33 @@ extension ViewController: SwitchTableViewCellDelegate {
     func switched(isOn: Bool, for title: String?) {
         reset()
 
-        var pushingNewViewController = false
-
         switch title {
         case "setNavigationBarHidden(:, animated:)":
-            self.navigationController?.setNavigationBarHidden(isOn, animated: true)
+            navigationController?.setNavigationBarHidden(isOn, animated: true)
         case "setToolBarHidden(:, animated:)":
-            self.navigationController?.setToolbarHidden(isOn, animated: true)
+            navigationController?.setToolbarHidden(isOn, animated: true)
         case "hidesBarsOnTap":
-            self.navigationController?.hidesBarsOnTap = isOn
+            navigationController?.hidesBarsOnTap = isOn
         case "hidesBarsOnSwipe":
-            self.navigationController?.hidesBarsOnSwipe = isOn
+            navigationController?.hidesBarsOnSwipe = isOn
         case "hidesBarsWhenVerticallyCompact":
-            self.navigationController?.hidesBarsWhenVerticallyCompact = isOn
+            navigationController?.hidesBarsWhenVerticallyCompact = isOn
         case "hidesBarsWhenKeyboardAppears":
-            self.navigationController?.hidesBarsWhenKeyboardAppears = isOn
+            navigationController?.hidesBarsWhenKeyboardAppears = isOn
         case "hidesSearchBarWhenScrolling":
-            self.navigationItem.hidesSearchBarWhenScrolling = isOn
+            navigationItem.hidesSearchBarWhenScrolling = isOn
         case "hidesNavigationBarDuringPresentation":
-            self.searchController.hidesNavigationBarDuringPresentation = isOn
+            searchController.hidesNavigationBarDuringPresentation = isOn
         case "prefersStatusBarHidden (override)":
-            if (isOn) {
-                let viewControllerWithNoStatusBar = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ViewController") as! ViewController
-                viewControllerWithNoStatusBar.statusBarHidden = true
-                navigationController?.pushViewController(viewControllerWithNoStatusBar, animated: true)
-                pushingNewViewController = true
-            } else {
-                navigationController?.popViewController(animated: true)
-            }
+            statusBarHidden = isOn
+            setNeedsStatusBarAppearanceUpdate()
         case "prefersHomeIndicatorAutoHidden (override)":
-            if (isOn) {
-                let viewControllerWithNoHomeIndicator = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ViewController") as! ViewController
-                viewControllerWithNoHomeIndicator.homeIndicatorAutoHidden = true
-                navigationController?.pushViewController(viewControllerWithNoHomeIndicator, animated: true)
-                pushingNewViewController = true
-            } else {
-                navigationController?.popViewController(animated: true)
-            }
+            homeIndicatorAutoHidden = isOn
+            setNeedsUpdateOfHomeIndicatorAutoHidden()
         case "prefersLargeTitle":
             self.navigationController?.navigationBar.prefersLargeTitles = isOn
         default:
             break
-        }
-
-        if pushingNewViewController {
-            tableView.reloadData()
-            return
         }
 
         hidingList.forEach { (_, items) in
